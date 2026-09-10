@@ -18,28 +18,44 @@
 
 Каталог совместимости не может гарантировать отсутствие конфликтов между модами. Моды, добавленные вручную, приложению неизвестны. Некоторые серверные моды также нужны на клиентских ПК — это указано авторами конкретных модов.
 
-## Перенос и установка на Ubuntu Desktop
+## Полная установка на Ubuntu Desktop
 
-1. Скопируйте всю папку `MinecraftServerManager` на Ubuntu-ПК, например в `~/Desktop/MinecraftServerManager`.
-2. Откройте Терминал в этой папке.
-3. Выполните:
+Откройте терминал и последовательно выполните весь блок:
 
-   ```bash
-   chmod +x install-ubuntu.sh run.sh
-   ./install-ubuntu.sh
-   ```
+```bash
+sudo apt update
+sudo apt install -y git curl gnupg
 
-4. Запустите приложение из меню Ubuntu или командой:
+git clone https://github.com/0Carpediem0/MinecraftServerManager.git
+cd MinecraftServerManager
+chmod +x install-ubuntu.sh run.sh
+./install-ubuntu.sh
+```
 
-   ```bash
-   ./run.sh
-   ```
+Теперь установите агент playit из его официального APT-репозитория:
+
+```bash
+curl -SsL https://packages.playit.gg/keys/playit.gpg \
+  | gpg --dearmor \
+  | sudo tee /usr/share/keyrings/playit.gpg >/dev/null
+sudo chmod 0644 /usr/share/keyrings/playit.gpg
+sudo curl -fsSL -o /etc/apt/sources.list.d/playit.list \
+  https://packages.playit.gg/repo-files/playit-debian.list
+sudo apt update
+sudo apt install -y playit
+```
+
+Запустите приложение:
+
+```bash
+./run.sh
+```
 
 Установщик добавляет Python 3, Tkinter и OpenJDK 21 из репозиториев Ubuntu. Minecraft 1.20.5–1.21.x обычно использует Java 21; точное требование читается из официального манифеста выбранной версии. Minecraft 26.x требует Java 25. Если такой версии нет в репозитории вашей Ubuntu, установите JRE/JDK 25 из доверенного пакета дистрибутива или Eclipse Temurin и выберите `/.../bin/java` на вкладке «Настройки». Приложение проверит точную основную версию перед установкой и запуском.
 
 Сторонние Python-пакеты не требуются.
 
-Для внешнего доступа установите официальный агент playit со страницы <https://playit.gg/download/linux>. Команда `playit` должна быть доступна в терминале. При первом Run агент напечатает в живом журнале ссылку привязки. Откройте её, создайте туннель типа Minecraft Java на локальный адрес `127.0.0.1:25565`, затем передайте игрокам выданный playit внешний адрес. Проброс порта и публичный IP при этом не нужны. Туннель можно отключить на вкладке «Настройки» и настроить порт роутера самостоятельно.
+Команда установки playit выше взята с его [официальной страницы Linux](https://playit.gg/download/linux). После установки команда `playit` должна быть доступна в терминале. При первом Run агент напечатает в живом журнале ссылку привязки. Откройте её, создайте туннель типа Minecraft Java на локальный адрес `127.0.0.1:25565`, затем передайте игрокам выданный playit внешний адрес. Проброс порта и публичный IP при этом не нужны. Туннель можно отключить на вкладке «Настройки» и настроить порт роутера самостоятельно.
 
 ## Первый запуск сервера
 
