@@ -20,11 +20,11 @@
 
 ## Полная установка на Ubuntu Desktop
 
-Откройте терминал и последовательно выполните весь блок:
+Откройте терминал и последовательно выполните весь блок. Скрипт сам установит Python, Tkinter, Java 21 и агент playit:
 
 ```bash
 sudo apt update
-sudo apt install -y git curl gnupg
+sudo apt install -y git
 
 git clone https://github.com/0Carpediem0/MinecraftServerManager.git
 cd MinecraftServerManager
@@ -32,22 +32,10 @@ chmod +x install-ubuntu.sh run.sh
 ./install-ubuntu.sh
 ```
 
-Теперь установите агент playit из его официального APT-репозитория:
+После завершения **выйдите из учётной записи Ubuntu и войдите снова**. Это нужно, чтобы ваш пользователь получил доступ к системной службе playit. Затем запустите приложение:
 
 ```bash
-curl -SsL https://packages.playit.gg/keys/playit.gpg \
-  | gpg --dearmor \
-  | sudo tee /usr/share/keyrings/playit.gpg >/dev/null
-sudo chmod 0644 /usr/share/keyrings/playit.gpg
-sudo curl -fsSL -o /etc/apt/sources.list.d/playit.list \
-  https://packages.playit.gg/repo-files/playit-debian.list
-sudo apt update
-sudo apt install -y playit
-```
-
-Запустите приложение:
-
-```bash
+cd ~/MinecraftServerManager
 ./run.sh
 ```
 
@@ -55,7 +43,17 @@ sudo apt install -y playit
 
 Сторонние Python-пакеты не требуются.
 
-Команда установки playit выше взята с его [официальной страницы Linux](https://playit.gg/download/linux). После установки команда `playit` должна быть доступна в терминале. При первом Run агент напечатает в живом журнале ссылку привязки. Откройте её, создайте туннель типа Minecraft Java на локальный адрес `127.0.0.1:25565`, затем передайте игрокам выданный playit внешний адрес. Проброс порта и публичный IP при этом не нужны. Туннель можно отключить на вкладке «Настройки» и настроить порт роутера самостоятельно.
+Установка playit в скрипте использует его [официальный APT-репозиторий](https://playit.gg/download/linux). При первом Run агент напечатает в живом журнале ссылку привязки. Откройте её, создайте туннель типа Minecraft Java на локальный адрес `127.0.0.1:25565`, затем передайте игрокам выданный playit внешний адрес. Проброс порта и публичный IP при этом не нужны. Туннель можно отключить на вкладке «Настройки» и настроить порт роутера самостоятельно.
+
+### Ошибка `/run/playit/playitd.sock`
+
+Если приложение пишет, что сокет доступен только группе `playit`, выполните:
+
+```bash
+sudo usermod -aG playit "$USER"
+```
+
+После этого полностью выйдите из учётной записи Ubuntu и войдите снова. Простого закрытия терминала недостаточно. Проверить применение можно командой `id -nG`: в списке должна появиться группа `playit`.
 
 ## Первый запуск сервера
 
